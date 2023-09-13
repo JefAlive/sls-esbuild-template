@@ -1,0 +1,44 @@
+service: aws-node-esbuild-template
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  httpApi:
+    cors: true
+
+params:
+  default:
+    minify: true
+  local:
+    minify: false
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+package:
+  individually: true
+
+custom:
+  stages:
+    - local
+    - dev
+    - prod
+  stage: ${opt:stage, 'dev'}
+  esbuild:
+    bundle: true
+    minify: ${param:minify}
+    sourcemap: true
+    keepNames: true
+    watch:
+      pattern: ['src/**/*.ts']
+
+functions:
+  status:
+    handler: src/api/handler.handler
+    events:
+      - httpApi:
+          path: /status
+          method: get
