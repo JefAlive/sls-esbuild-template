@@ -8,7 +8,9 @@ export async function handler() {
       .max(255, { message: 'Must be 255 or fewer characters long' }),
   })
 
-  const randomObject = randomSchema.parse({ description: 'tá top!!!' })
+  const randomObject = randomSchema.parse({
+    description: 'just changed this awesome description',
+  })
 
   return {
     statusCode: 200,

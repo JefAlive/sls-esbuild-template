@@ -1,25 +1,30 @@
 service: aws-node-esbuild-template
 frameworkVersion: '3'
 
+package:
+  individually: true
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
 provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
   httpApi:
     cors: true
+  environment:
+    NODE_OPTIONS: "--enable-source-maps"
 
 params:
   default:
-    minify: true
+    esbuildMinify: true
+    esbuildExclude:
+      - aws-sdk
   local:
-    minify: false
-
-plugins:
-  - serverless-esbuild
-  - serverless-offline
-
-package:
-  individually: true
+    esbuildMinify: false
+    esbuildExclude: []
 
 custom:
   stages:
@@ -29,11 +34,13 @@ custom:
   stage: ${opt:stage, 'dev'}
   esbuild:
     bundle: true
-    minify: ${param:minify}
+    minify: ${param:esbuildMinify}
     sourcemap: true
     keepNames: true
     watch:
-      pattern: ['src/**/*.ts']
+      pattern: 
+        - 'src/**/*.ts'
+    exclude: ${param:esbuildExclude}
 
 functions:
   status:
