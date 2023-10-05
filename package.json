@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "export SLS_DEBUG=* && serverless offline start --reloadHandler --noTimeout --stage local",
-    "build": "npm run lint && tsc --noEmit",
-    "deploy": "npm run build && serverless deploy --stage dev --region us-east-1",
+    "check": "tsc --noEmit",
+    "deploy": "npm run lint && npm run check && serverless deploy --stage dev --region us-east-1",
     "lint": "eslint . --ext .ts --fix"
   },
   "author": "",
